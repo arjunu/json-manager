@@ -5,7 +5,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var base = require('./webpack.base.config');
 
 module.exports = {
-
+    target: "electron",
     devtool: 'source-map',
     entry: [
         'whatwg-fetch',

@@ -21,6 +21,9 @@ function createWindow() {
     else
         mainWindow.loadURL('file://' + __dirname + '/index.html');
 
+    BrowserWindow.addDevToolsExtension("/Users/rztm838/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/0.15.4_0");
+    BrowserWindow.addDevToolsExtension("/Users/rztm838/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.8.3_0");
+
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
         // Dereference the window object, usually you would store windows
