@@ -14,13 +14,12 @@ export default class Drawer extends React.Component {
             <MUIDrawer open={true}>
                 <div style={{padding: "0px 16px"}}><TextField
                     hintText="Search"
-                    floatingLabelText="Search"
                 /><br /></div>
                 <List>
                     <Subheader>Collections</Subheader>
                     <ListItem
                         primaryText="Collection 1"
-                        initiallyOpen={true}
+                        initiallyOpen={false}
                         primaryTogglesNestedList={true}
                         nestedItems={[
                             <ListItem
@@ -31,7 +30,7 @@ export default class Drawer extends React.Component {
                     />
                     <ListItem
                         primaryText="Collection 2"
-                        initiallyOpen={true}
+                        initiallyOpen={false}
                         primaryTogglesNestedList={true}
                         nestedItems={[
                             <ListItem

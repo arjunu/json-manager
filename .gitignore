@@ -2,6 +2,7 @@
 __build__
 coverage
 *.DS_store
+*JSON Manager-darwin-x64
 
 *.idea
 .idea/workspace.xml
@@ -9,3 +10,5 @@ coverage
 .idea/dictionaries
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
+
+npm-debug.log
