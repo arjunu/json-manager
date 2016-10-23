@@ -7,23 +7,46 @@ import ContentInbox from 'material-ui/svg-icons/content/inbox';
 import Add from 'material-ui/svg-icons/content/add-box';
 import Subheader from 'material-ui/Subheader';
 import {selectDrawer} from './Drawer.selector';
-import {ACTION_ADD_COLLECTION} from '../../constants/actions';
+import {ACTION_ADD_COLLECTION, ACTION_LOAD_JSON_FILE} from '../../constants/actions';
 import {connect} from 'react-redux';
+
+const getNestedItems = (collection, onClick) => (
+    [...collection.get("files").valueSeq().map(file =>(
+        <ListItem
+            primaryText={file.get("name")}
+            key={file.get("id")}
+            primaryTogglesNestedList={true}
+            onClick={()=>onClick(collection, file)}
+        />
+    ))]
+);
 
 export class Drawer extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         this.addCollectionClick = this.addCollectionClick.bind(this);
+        this.openJSONFile = this.openJSONFile.bind(this);
     }
 
     addCollectionClick() {
         this.props.dispatch({type: ACTION_ADD_COLLECTION, name: ""});
     }
 
+    openJSONFile(collection, file) {
+        this.props.dispatch({
+            type: ACTION_LOAD_JSON_FILE,
+            payload: {
+                collectionId: collection.get("id"),
+                id: file.get("id"),
+                projectDir: this.props.projectDir
+            }
+        });
+    }
+
     render() {
 
-        const {collections} = this.props;
+        const {collections, onAddCollectionClick, onAddJSONClick} = this.props;
 
         return (
             <MUIDrawer open={true}>
@@ -31,25 +54,22 @@ export class Drawer extends React.Component {
                     hintText="Search"
                 /><br /></div>
                 <List>
-                    <Subheader>Collections</Subheader>
                     <ListItem
-                        key={1}
+                        key={"AddNewCollection"}
                         primaryText="Add Collection"
                         rightIcon={<Add/>}
-                        onClick={this.addCollectionClick}
+                        onClick={onAddCollectionClick}
                     />
-                    {collections.valueSeq().map(collection => (<ListItem
-                        primaryText={collection.get("name")}
-                        key={collection.get("id")}
-                        initiallyOpen={false}
-                        primaryTogglesNestedList={true}
-                        nestedItems={[
-                            <ListItem
-                                key={1}
-                                primaryText="JSON 1"
-                            />
-                        ]}
-                    />))}
+                    <Subheader>Collections</Subheader>
+                    {collections.valueSeq().map(collection =>(
+                        <ListItem
+                            primaryText={collection.get("name")}
+                            key={collection.get("id")}
+                            initiallyOpen={false}
+                            primaryTogglesNestedList={true}
+                            nestedItems={getNestedItems(collection, this.openJSONFile)}
+                        />
+                    ))}
                 </List>
             </MUIDrawer>
         );

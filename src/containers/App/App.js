@@ -1,38 +1,19 @@
 import React from 'react';
 import Drawer from '../Drawer/Drawer';
-import Editor from '../../components/Editor/Editor';
-import JSONTree from 'react-json-tree'
-import sampleJSON from '../../sampleJSON';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 const dialog = require('electron').remote.dialog;
 import {ACTION_INIT_PROJECT} from '../../constants/actions';
 import {selectApp} from './App.selector';
+import AddDialog from '../../components/AddDialog/AddDialog';
+import {ACTION_ADD_COLLECTION, ACTION_ADD_JSON} from '../../constants/actions';
+import {generateId} from '../../utils';
+import Content from '../Content/Content';
 
 const styles = {
     loadProjectWrapper: {padding: 16},
     loadProjectButton: {
         marginTop: 12
-    },
-    contentWrapper: {
-        position: "absolute",
-        left: "256px",
-        height: "100%",
-        top: 0,
-        bottom: 0,
-        right: 0
-    },
-    editorWrapper: {
-        height: "100%",
-        position: "relative",
-        width: "50%",
-        float: "left"
-    },
-    treeWrapper: {
-        height: "100%",
-        position: "relative",
-        width: "50%",
-        float: "right"
     }
 };
 
@@ -55,11 +36,44 @@ class App extends React.Component {
         super(props, context);
 
         this.onLoadProjectClick = this.onLoadProjectClick.bind(this);
+        this.onAdd = this.onAdd.bind(this);
+
+        this.state = {
+            showAddCollectionDialog: false,
+            addNewJSONFor: false
+        };
     }
 
     onLoadProjectClick() {
         const projectDir = dialog.showOpenDialog({properties: ['openDirectory']})[0];
-        this.props.dispatch({type: ACTION_INIT_PROJECT, payload: {path: projectDir}});
+        this.props.dispatch({
+            type: ACTION_INIT_PROJECT,
+            payload: {path: projectDir},
+            origin: "App.onLoadProjectClick"
+        });
+    }
+
+    onAdd(newItem) {
+        if (this.state.addNewJSONFor) {
+            if (newItem)
+                this.props.dispatch({
+                    type: ACTION_ADD_JSON,
+                    payload: {name: newItem, collectionId: this.state.addNewJSONFor.get("id"), id: generateId()},
+                    origin: "App.onAdd"
+                });
+
+            this.setState({addNewJSONFor: false});
+        }
+        else {
+            if (newItem)
+                this.props.dispatch({
+                    type: ACTION_ADD_COLLECTION,
+                    payload: {name: newItem, id: generateId()},
+                    origin: "App.onAdd"
+                });
+
+            this.setState({showAddCollectionDialog: false});
+        }
     }
 
     render() {
@@ -69,15 +83,15 @@ class App extends React.Component {
         if (projectDir)
             return (
                 <div>
-                    <Drawer/>
-                    <div style={styles.contentWrapper}>
-                        <div style={styles.editorWrapper}>
-                            <Editor content={JSON.stringify(sampleJSON)}/>
-                        </div>
-                        <div style={styles.treeWrapper}>
-                            <JSONTree data={sampleJSON}/>
-                        </div>
-                    </div>
+                    <Drawer onAddCollectionClick={()=>this.setState({showAddCollectionDialog: true})}
+                            onAddJSONClick={collection=>this.setState({addNewJSONFor: collection})}
+                    />
+                    <Content/>
+                    <AddDialog show={this.state.showAddCollectionDialog || !!this.state.addNewJSONFor}
+                               onClose={this.onAdd}
+                               title={this.state.addNewJSONFor ? `Add new JSON under collection "${this.state.addNewJSONFor.get("name")}"` : "Add new collection"}
+                               hint={this.state.addNewJSONFor ? "New JSON name" : "New collection name"}
+                    />
                 </div>);
         else
             return <LoadProject onLoadProjectClick={this.onLoadProjectClick}/>;

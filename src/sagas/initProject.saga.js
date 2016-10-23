@@ -1,5 +1,6 @@
 import {call, put, fork, take, cancel} from 'redux-saga/effects';
 import {ACTION_INIT_PROJECT, ACTION_INIT_PROJECT_SUCCESS} from '../constants/actions';
+import jsonfile from 'jsonfile';
 const fs = require('fs');
 
 /**
@@ -9,9 +10,10 @@ const fs = require('fs');
 export function* initProject(action) {
     const {path} = action.payload;
     try {
-        fs.writeFile(path + '/manager.json', JSON.stringify({}), 'utf8');
-        yield put({type: ACTION_INIT_PROJECT_SUCCESS, payload: {projectDir: path}});
-    } catch (error) {
+        const data = jsonfile.readFileSync(path + "/manager.json");
+        yield put({type: ACTION_INIT_PROJECT_SUCCESS, payload: {projectDir: path, collections: data.collections}});
+    }
+    catch (error) {
         console.error(error);
     }
 }
@@ -32,5 +34,5 @@ export function* initProjectWatcher() {
  */
 export default function* initProjectSaga() {
     // Fork watcher so we can continue execution
-    const watcher = yield fork(initProjectWatcher);
+    yield fork(initProjectWatcher);
 }
