@@ -3,7 +3,7 @@ import {render} from 'react-dom';
 import brace from 'brace';
 import AceEditor from 'react-ace';
 import 'brace/mode/json';
-import 'brace/theme/xcode';
+import 'brace/theme/dawn';
 
 const code = ``;
 
@@ -16,9 +16,9 @@ const Editor = ({content}) => (
         height="100%"
         width="100%"
         mode="json"
-        theme="xcode"
+        theme="dawn"
         onChange={onChange}
-        name="UNIQUE_ID_OF_DIV"
+        name="jm_editor"
         editorProps={{$blockScrolling: true}}
         value={content}
     />
