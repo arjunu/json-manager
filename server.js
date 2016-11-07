@@ -6,8 +6,8 @@ new WebpackDevServer(webpack(config), {
     hot: true,
     historyApiFallback: true,
     stats: {colors: true}
-}).listen(8080, "0.0.0.0", function (err) {
+}).listen(8090, "0.0.0.0", function (err) {
     if (err)
         console.log(err);
-    console.log('Listening at localhost:8080');
+    console.log('Listening at localhost:8090');
 });

@@ -5,13 +5,7 @@ import AceEditor from 'react-ace';
 import 'brace/mode/json';
 import 'brace/theme/dawn';
 
-const code = ``;
-
-function onChange(newValue) {
-    console.log('change', newValue);
-}
-
-const Editor = ({content}) => (
+const Editor = ({content, onChange}) => (
     <AceEditor
         height="100%"
         width="100%"

@@ -3,13 +3,18 @@ import {
     ACTION_INIT_PROJECT_SUCCESS,
     ACTION_ADD_COLLECTION,
     ACTION_ADD_JSON,
-    ACTION_LOAD_JSON_FILE_SUCCESS
+    ACTION_LOAD_JSON_FILE_SUCCESS,
+    ACTION_LOAD_NEW
 } from '../constants/actions';
 import {fromJS} from 'immutable';
 
 const initialState = fromJS({
-    // projectDir: "/Users/rztm838/Documents/Github/json-manager/data",
-    collections: {}
+    // projectDir: "/Users/rztm838/Documents/Github/bigbrain-ui/data",
+    collections: {},
+    openFile: {
+        id: "new",
+        data: {}
+    }
 });
 
 const reducerFunctions = {
@@ -30,7 +35,8 @@ const reducerFunctions = {
         id: payload.id,
         collectionId: payload.collectionId,
         data: payload.data
-    }))
+    })),
+    [ACTION_LOAD_NEW]: state => state.set("openFile", fromJS({id: "new", data: {}}))
 };
 
 const rootReducer = createReducerFromObject(reducerFunctions, initialState);

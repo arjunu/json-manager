@@ -7,7 +7,7 @@ import ContentInbox from 'material-ui/svg-icons/content/inbox';
 import Add from 'material-ui/svg-icons/content/add-box';
 import Subheader from 'material-ui/Subheader';
 import {selectDrawer} from './Drawer.selector';
-import {ACTION_ADD_COLLECTION, ACTION_LOAD_JSON_FILE} from '../../constants/actions';
+import {ACTION_ADD_COLLECTION, ACTION_LOAD_JSON_FILE, ACTION_LOAD_NEW} from '../../constants/actions';
 import {connect} from 'react-redux';
 
 const getNestedItems = (collection, onClick) => (
@@ -27,10 +27,15 @@ export class Drawer extends React.Component {
 
         this.addCollectionClick = this.addCollectionClick.bind(this);
         this.openJSONFile = this.openJSONFile.bind(this);
+        this.onNewClick = this.onNewClick.bind(this);
     }
 
     addCollectionClick() {
         this.props.dispatch({type: ACTION_ADD_COLLECTION, name: ""});
+    }
+
+    onNewClick(){
+        this.props.dispatch({type: ACTION_LOAD_NEW});
     }
 
     openJSONFile(collection, file) {
@@ -61,6 +66,11 @@ export class Drawer extends React.Component {
                         onClick={onAddCollectionClick}
                     />
                     <Subheader>Collections</Subheader>
+                    <ListItem
+                        primaryText="New"
+                        key={"new"}
+                        onClick={this.onNewClick}
+                    />
                     {collections.valueSeq().map(collection =>(
                         <ListItem
                             primaryText={collection.get("name")}

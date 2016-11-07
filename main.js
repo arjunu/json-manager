@@ -14,7 +14,7 @@ function createWindow() {
 
     // and load the index.html of the app.
     if (process.env.NODE_ENV === "development"){
-        mainWindow.loadURL(`http://localhost:8080`);
+        mainWindow.loadURL(`http://localhost:8090`);
         // Open the DevTools.
         mainWindow.webContents.openDevTools();
     }
@@ -22,7 +22,7 @@ function createWindow() {
         mainWindow.loadURL('file://' + __dirname + '/index.html');
 
     BrowserWindow.addDevToolsExtension("/Users/rztm838/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/0.15.4_0");
-    BrowserWindow.addDevToolsExtension("/Users/rztm838/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.8.3_0");
+    BrowserWindow.addDevToolsExtension("/Users/rztm838/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.9.2_0");
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {

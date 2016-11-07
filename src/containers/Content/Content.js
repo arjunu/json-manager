@@ -47,26 +47,64 @@ const styles = {
         float: "right",
         background: "#18262f",
         fontFamily: "monospace"
+    },
+    errorBlock: {
+        padding: "15px",
+        color: "red"
     }
 };
 
 class Content extends React.Component {
 
-    render() {
-        const {openFileData} = this.props;
+    constructor(props, context) {
+        super(props, context);
 
+        this.state = {};
+
+        this.onEditorChange = this.onEditorChange.bind(this);
+    }
+
+    componentDidMount() {
+        this.setState({
+            code: JSON.stringify(this.props.openFile.get("data"), null, "\t"),
+            parsedCode: this.props.openFile.get("data")
+        });
+    }
+
+    componentWillReceiveProps(newProps) {
+        if (this.props.openFile.get("id") !== newProps.openFile.get("id"))
+            this.setState({
+                code: JSON.stringify(newProps.openFile.get("data"), null, "\t"),
+                parsedCode: newProps.openFile.get("data")
+            });
+    }
+
+    onEditorChange(newValue) {
+        this.setState({code: newValue});
+        try {
+            this.setState({parsedCode: JSON.parse(newValue)});
+            this.setState({error: ""});
+        }
+        catch (e) {
+            this.setState({error: e.message});
+        }
+    }
+
+    render() {
         return (
             <div style={styles.contentWrapper}>
                 <div style={styles.editorWrapper}>
-                    <Editor content={JSON.stringify(openFileData, null, '\t')}
+                    <Editor content={this.state.code}
+                            onChange={this.onEditorChange}
                     />
                 </div>
                 <div style={styles.treeWrapper}>
-                    <JSONTree data={openFileData}
-                              theme={theme}
-                              invertTheme={false}
-                              isLightTheme={false}
-                    />
+                    {this.state.error ? <div style={styles.errorBlock}>{this.state.error}</div> :
+                        <JSONTree data={this.state.parsedCode}
+                                  theme={theme}
+                                  invertTheme={false}
+                                  isLightTheme={false}
+                        />}
                 </div>
             </div>
         );
